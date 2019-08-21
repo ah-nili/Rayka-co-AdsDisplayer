@@ -1,6 +1,7 @@
 package com.raykaad.test.addisplayer;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
@@ -132,6 +133,10 @@ public class RaykaAd {
 
     public static String getPackageName() {
         return LibApp.getContext().getPackageName();
+    }
+
+    public static String getPackageName(Context context) {
+        return context.getPackageName();
     }
 
 
