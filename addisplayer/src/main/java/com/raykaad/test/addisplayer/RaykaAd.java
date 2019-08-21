@@ -40,6 +40,7 @@ public class RaykaAd {
 
     public static void init(Context context) {
         getInstance().context = context;
+        getInstance().googleAdId = "";
         getInstance().setGoogleAdsId();
     }
 
@@ -159,7 +160,7 @@ public class RaykaAd {
 
         @Override
         protected void onPostExecute(String advertId) {
-            googleAdId = advertId ;
+            googleAdId = advertId;
         }
 
     }
