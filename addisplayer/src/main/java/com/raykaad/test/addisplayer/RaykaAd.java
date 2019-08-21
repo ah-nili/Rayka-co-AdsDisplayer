@@ -24,26 +24,31 @@ import java.io.IOException;
 
 public class RaykaAd {
 
-    private static RaykaAd INSTANCE;
+    private static RaykaAd instance;
+    private Context context;
+    private String googleAdId;
 
-    public RaykaAd getINSTANS() {
 
-        if (INSTANCE == null)
-            INSTANCE = new RaykaAd();
+    public static RaykaAd getInstance() {
 
-        return INSTANCE;
+        if (instance == null)
+            instance = new RaykaAd();
+
+        return instance;
     }
 
 
-    public static void getAdsDownloadURL(final CallBack.GetAdsDownloadURL callBack) {
-        getAdsDownloadURL("", "", callBack);
+    public static void init(Context context) {
+        getInstance().context = context;
+        getInstance().setGoogleAdsId();
     }
 
-    public static void getAdsDownloadURL(String googleAdId, String packageName, final CallBack.GetAdsDownloadURL callBack) {
+
+    public void getAdsDownloadURL(final CallBack.GetAdsDownloadURL callBack) {
         RequestHelper.getINSTANCE().SendAsyncRequest(
                 RequestMethodEnum.POST,
                 UrlEnum.GET_ADS_DOWNLOAD_URL.getUrl(),
-                new GetAdsDownloadUrlRequest(googleAdId, packageName).getJsonObject(),
+                new GetAdsDownloadUrlRequest(googleAdId, getPackageName()).getJsonObject(),
                 new RequestCallBack() {
                     @Override
                     public void Success(BaseResponse baseResponse) {
@@ -66,15 +71,11 @@ public class RaykaAd {
     }
 
 
-    public static void getAllInstalledAds(final CallBack.GetAllInstalledAds callBack) {
-        getAllInstalledAds("", "", callBack);
-    }
-
-    public static void getAllInstalledAds(String googleAdId, String packageName, final CallBack.GetAllInstalledAds callBack) {
+    public void getAllInstalledAds(final CallBack.GetAllInstalledAds callBack) {
         RequestHelper.getINSTANCE().SendAsyncRequest(
                 RequestMethodEnum.POST,
                 UrlEnum.GET_ALL_INSTALLED_ADS.getUrl(),
-                new GetAdsDownloadUrlRequest(googleAdId, packageName).getJsonObject(),
+                new GetAdsDownloadUrlRequest(googleAdId, getPackageName()).getJsonObject(),
                 new RequestCallBack() {
                     @Override
                     public void Success(BaseResponse baseResponse) {
@@ -97,11 +98,7 @@ public class RaykaAd {
     }
 
 
-    public static void adsDone(final CallBack.AdsDone callBack) {
-        adsDone("", "", callBack);
-    }
-
-    public static void adsDone(String googleAdId, String adsID, final CallBack.AdsDone callBack) {
+    public void adsDone(String adsID, final CallBack.AdsDone callBack) {
         RequestHelper.getINSTANCE().SendAsyncRequest(
                 RequestMethodEnum.POST,
                 UrlEnum.ADS_DONE.getUrl(),
@@ -121,31 +118,28 @@ public class RaykaAd {
     }
 
 
-    public static void setGoogleAdsId() {
-        if (MyPreferencesManager.getInstance().getGooglrAdsId().matches(""))
+    public void setGoogleAdsId() {
+        if (googleAdId.matches(""))
             new GoogleAdsIdAsyncTask().execute();
     }
 
-    public static String getGoogleAdsId() {
+    public String getGoogleAdsId() {
         setGoogleAdsId();
-        return MyPreferencesManager.getInstance().getGooglrAdsId();
+        return googleAdId;
     }
 
-    public static String getPackageName() {
-        return LibApp.getContext().getPackageName();
-    }
-
-    public static String getPackageName(Context context) {
+    public String getPackageName() {
         return context.getPackageName();
     }
 
 
-    private static class GoogleAdsIdAsyncTask extends AsyncTask<BaseRequest, String, String> {
+
+    private class GoogleAdsIdAsyncTask extends AsyncTask<BaseRequest, String, String> {
         @Override
         protected String doInBackground(BaseRequest... baseRequests) {
             AdvertisingIdClient.Info idInfo = null;
             try {
-                idInfo = AdvertisingIdClient.getAdvertisingIdInfo(LibApp.getContext());
+                idInfo = AdvertisingIdClient.getAdvertisingIdInfo(context);
             } catch (GooglePlayServicesNotAvailableException e) {
                 e.printStackTrace();
             } catch (GooglePlayServicesRepairableException e) {
@@ -165,7 +159,7 @@ public class RaykaAd {
 
         @Override
         protected void onPostExecute(String advertId) {
-            MyPreferencesManager.getInstance().setGoogleAdsId(advertId);
+            googleAdId = advertId ;
         }
 
     }
