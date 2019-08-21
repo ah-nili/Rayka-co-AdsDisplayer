@@ -25,7 +25,45 @@ public class RequestHandler {
         urlConnection.setReadTimeout(20000);
         urlConnection.setConnectTimeout(20000);
         urlConnection.setRequestMethod("POST");
-        urlConnection.setRequestProperty("Content-Type","application/json");
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+        urlConnection.setRequestProperty("Accept", "application/json");
+        urlConnection.setDoInput(true);
+        urlConnection.setDoOutput(true);
+
+        OutputStream os = urlConnection.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+        writer.write(postDataParams.toString());
+        writer.flush();
+        writer.close();
+        os.close();
+
+        int responseCode = urlConnection.getResponseCode(); // To Check for 200
+        InputStream inputStream;
+        if (responseCode == HttpsURLConnection.HTTP_OK)
+            inputStream = urlConnection.getInputStream();
+        else
+            inputStream = urlConnection.getErrorStream();
+
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuffer sb = new StringBuffer("");
+        String line = "";
+        while ((line = in.readLine()) != null) {
+            sb.append(line);
+            break;
+        }
+        in.close();
+        return sb.toString();
+    }
+
+    public static String sendPut(String r_url, JSONObject postDataParams) throws Exception {
+        URL url = new URL(r_url);
+
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setReadTimeout(20000);
+        urlConnection.setConnectTimeout(20000);
+        urlConnection.setRequestMethod("PUT");
+        urlConnection.setRequestProperty("Content-Type", "application/json");
         urlConnection.setRequestProperty("Accept", "application/json");
         urlConnection.setDoInput(true);
         urlConnection.setDoOutput(true);

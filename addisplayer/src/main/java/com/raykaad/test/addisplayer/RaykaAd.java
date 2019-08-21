@@ -47,9 +47,8 @@ public class RaykaAd {
 
     public void getAdsDownloadURL(final CallBack.GetAdsDownloadURL callBack) {
         RequestHelper.getINSTANCE().SendAsyncRequest(
-                RequestMethodEnum.POST,
-                UrlEnum.GET_ADS_DOWNLOAD_URL.getUrl(),
-                new GetAdsDownloadUrlRequest(googleAdId, getPackageName()).getJsonObject(),
+                RequestMethodEnum.GET,
+                UrlEnum.GET_ADS_DOWNLOAD_URL.getUrl()+"/"+googleAdId+"/"+getPackageName(),
                 new RequestCallBack() {
                     @Override
                     public void Success(BaseResponse baseResponse) {
@@ -74,9 +73,8 @@ public class RaykaAd {
 
     public void getAllInstalledAds(final CallBack.GetAllInstalledAds callBack) {
         RequestHelper.getINSTANCE().SendAsyncRequest(
-                RequestMethodEnum.POST,
-                UrlEnum.GET_ALL_INSTALLED_ADS.getUrl(),
-                new GetAdsDownloadUrlRequest(googleAdId, getPackageName()).getJsonObject(),
+                RequestMethodEnum.GET,
+                UrlEnum.GET_ALL_INSTALLED_ADS.getUrl()+"/"+googleAdId+"/"+getPackageName(),
                 new RequestCallBack() {
                     @Override
                     public void Success(BaseResponse baseResponse) {
@@ -101,7 +99,7 @@ public class RaykaAd {
 
     public void adsDone(String adsID, final CallBack.AdsDone callBack) {
         RequestHelper.getINSTANCE().SendAsyncRequest(
-                RequestMethodEnum.POST,
+                RequestMethodEnum.PUT,
                 UrlEnum.ADS_DONE.getUrl(),
                 new AdsDoneRequest(googleAdId, adsID).getJsonObject(),
                 new RequestCallBack() {

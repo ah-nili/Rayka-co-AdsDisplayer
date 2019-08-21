@@ -35,12 +35,16 @@ public class RequestHelper {
         protected String doInBackground(BaseRequest... requests) {
             try {
                 BaseRequest request = requests[0];
-                if (request.isRequestMethodGet()) {
-                    return RequestHandler.sendGet(request.getUrl());
-                } else if (request.isRequestMethodPost()) {
-                    return RequestHandler.sendPost(request.getUrl(), request.getData());
-                } else {
-                    return "";
+
+                switch (request.getRequestMethodEnum()) {
+                    case GET:
+                        return RequestHandler.sendGet(request.getUrl());
+                    case PUT:
+                        return RequestHandler.sendPost(request.getUrl(), request.getData());
+                    case POST:
+                        return RequestHandler.sendPut(request.getUrl(), request.getData());
+                    default:
+                        return "";
                 }
             } catch (Exception e) {
                 return new String("Exception: " + e.getMessage());
