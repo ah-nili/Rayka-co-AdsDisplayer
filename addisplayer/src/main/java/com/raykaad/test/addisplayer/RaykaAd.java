@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.raykaad.test.addisplayer.model.AdsData;
 import com.raykaad.test.addisplayer.model.AdsDoneRequest;
 import com.raykaad.test.addisplayer.model.BaseRequest;
 import com.raykaad.test.addisplayer.model.BaseResponse;
@@ -41,78 +42,99 @@ public class RaykaAd {
         getInstance().setGoogleAdsId();
     }
 
-    public void getAdsDownloadURL(final CallBack.GetAdsDownloadURL callBack) {
-        RequestHelper.getINSTANCE().SendAsyncRequest(
-                RequestMethodEnum.GET,
-                UrlEnum.GET_ADS_DOWNLOAD_URL.getUrl()+"/"+googleAdId+"/"+getPackageName(),
-                new RequestCallBack() {
-                    @Override
-                    public void Success(BaseResponse baseResponse) {
-                        GetAdsDownloadUrlResponse res = null;
-                        try {
-                            res = new GetAdsDownloadUrlResponse(baseResponse.getData());
-                            callBack.onResponse(res.getAdsData());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            callBack.onFailure();
-                        }
-                    }
 
-                    @Override
-                    public void Error() {
-                        callBack.onFailure();
-                    }
-                }
-        );
+    public void getAdsDownloadURL(final CallBack.GetAdsDownloadURL callBack) {
+        isSyncGoogleAdsId(new SyncCallback() {
+            @Override
+            public void synced() {
+                RequestHelper.getINSTANCE().SendAsyncRequest(
+                        RequestMethodEnum.GET,
+                        UrlEnum.GET_ADS_DOWNLOAD_URL.getUrl() + "/" + getGoogleAdsId() + "/" + getPackageName(),
+                        new RequestCallBack() {
+                            @Override
+                            public void Success(BaseResponse baseResponse) {
+                                AdsData res = null;
+                                try {
+                                    res = new AdsData(baseResponse.getData());
+                                    callBack.onResponse(res);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    callBack.onFailure();
+                                }
+                            }
+
+                            @Override
+                            public void Error() {
+                                callBack.onFailure();
+                            }
+                        }
+                );
+            }
+        });
+
     }
 
     public void getAllInstalledAds(final CallBack.GetAllInstalledAds callBack) {
-        RequestHelper.getINSTANCE().SendAsyncRequest(
-                RequestMethodEnum.GET,
-                UrlEnum.GET_ALL_INSTALLED_ADS.getUrl()+"/"+googleAdId+"/"+getPackageName(),
-                new RequestCallBack() {
-                    @Override
-                    public void Success(BaseResponse baseResponse) {
-                        GetAllInstalledAdsResponse res = null;
-                        try {
-                            res = new GetAllInstalledAdsResponse(baseResponse.getData());
-                            callBack.onResponse(res.getAdsDatas());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            callBack.onFailure();
+        isSyncGoogleAdsId(new SyncCallback() {
+            @Override
+            public void synced() {
+                RequestHelper.getINSTANCE().SendAsyncRequest(
+                        RequestMethodEnum.GET,
+                        UrlEnum.GET_ALL_INSTALLED_ADS.getUrl() + "/" + getGoogleAdsId() + "/" + getPackageName(),
+                        new RequestCallBack() {
+                            @Override
+                            public void Success(BaseResponse baseResponse) {
+                                GetAllInstalledAdsResponse res = null;
+                                try {
+                                    res = new GetAllInstalledAdsResponse(baseResponse.getData());
+                                    callBack.onResponse(res.getData());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    callBack.onFailure();
+                                }
+                            }
+
+                            @Override
+                            public void Error() {
+                                callBack.onFailure();
+                            }
                         }
-                    }
+                );
+            }
+        });
 
-                    @Override
-                    public void Error() {
-                        callBack.onFailure();
-                    }
-                }
-        );
     }
 
-    public void adsDone(String adsID, final CallBack.AdsDone callBack) {
-        RequestHelper.getINSTANCE().SendAsyncRequest(
-                RequestMethodEnum.PUT,
-                UrlEnum.ADS_DONE.getUrl(),
-                new AdsDoneRequest(googleAdId, adsID).getJsonObject(),
-                new RequestCallBack() {
-                    @Override
-                    public void Success(BaseResponse baseResponse) {
-                        callBack.onResponse();
-                    }
+    public void adsDone(final String adsID, final CallBack.AdsDone callBack) {
+        isSyncGoogleAdsId(new SyncCallback() {
+            @Override
+            public void synced() {
+                RequestHelper.getINSTANCE().SendAsyncRequest(
+                        RequestMethodEnum.PUT,
+                        UrlEnum.ADS_DONE.getUrl(),
+                        new AdsDoneRequest(getGoogleAdsId(), adsID).getJsonObject(),
+                        new RequestCallBack() {
+                            @Override
+                            public void Success(BaseResponse baseResponse) {
+                                callBack.onResponse();
+                            }
 
-                    @Override
-                    public void Error() {
-                        callBack.onFailure();
-                    }
-                }
-        );
+                            @Override
+                            public void Error() {
+                                callBack.onFailure();
+                            }
+                        }
+                );
+            }
+        });
     }
+
 
     public void setGoogleAdsId() {
         if (googleAdId.matches(""))
             new GoogleAdsIdAsyncTask().execute();
+        else
+            syncCallback.synced();
     }
 
     public String getGoogleAdsId() {
@@ -123,6 +145,7 @@ public class RaykaAd {
     public String getPackageName() {
         return context.getPackageName();
     }
+
 
     private class GoogleAdsIdAsyncTask extends AsyncTask<BaseRequest, String, String> {
         @Override
@@ -150,8 +173,21 @@ public class RaykaAd {
         @Override
         protected void onPostExecute(String advertId) {
             googleAdId = advertId;
+            syncCallback.synced();
         }
 
     }
 
+
+    private SyncCallback syncCallback;
+
+    public interface SyncCallback {
+        void synced();
+    }
+
+
+    private void isSyncGoogleAdsId(SyncCallback callback) {
+        syncCallback = callback;
+        setGoogleAdsId();
+    }
 }

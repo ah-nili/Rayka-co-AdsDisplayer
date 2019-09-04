@@ -1,6 +1,6 @@
 package com.raykaad.test.addisplayer.model;
 
-import com.raykaad.test.addisplayer.object_customer.AdsData;
+import android.support.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,55 +11,30 @@ import java.util.List;
 
 public class GetAllInstalledAdsResponse {
 
-    private String adId;
-    private String url;
-    private String title;
-    private String description;
 
-    public GetAllInstalledAdsResponse(Object data) throws JSONException {
-        JSONArray jsonArray = (JSONArray) data;
-        JSONObject jsonObject = (JSONObject) data;
-        this.adId = jsonObject.getString("id");
-        this.url = jsonObject.getString("url");
-        this.title = jsonObject.getString("title");
-        this.description = jsonObject.getString("description");
+    private List<AdsData> data;
 
+    public GetAllInstalledAdsResponse(@Nullable Object object) throws JSONException {
+        this.data = new ArrayList<>();
+        if (data != null) {
+            JSONArray jsonArray = (JSONArray) object;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                AdsData adsData = new AdsData();
+                JSONObject jsonobject = (JSONObject) jsonArray.get(i);
+                adsData.setId(jsonobject.optString("id"));
+                adsData.setTitle(jsonobject.optString("title"));
+                adsData.setDescription(jsonobject.optString("description"));
+                adsData.setUrl(jsonobject.optString("url"));
+                data.add(adsData);
+            }
+        }
     }
 
-    public String getAdId() {
-        return adId;
+    public List<AdsData> getData() {
+        return data;
     }
 
-    public void setAdId(String adId) {
-        this.adId = adId;
+    public void setData(List<AdsData> data) {
+        this.data = data;
     }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<AdsData> getAdsDatas(){
-        return new ArrayList<>();
-    }
-
 }

@@ -1,7 +1,7 @@
 package com.raykaad.test.addisplayer;
 
 
-import com.raykaad.test.addisplayer.object_customer.AdsData;
+import com.raykaad.test.addisplayer.model.AdsData;
 
 import java.util.List;
 

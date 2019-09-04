@@ -1,20 +1,18 @@
 package com.raykaad.test.addisplayer.model;
 
-import com.raykaad.test.addisplayer.object_customer.AdsData;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GetAdsDownloadUrlResponse {
 
-    private String adId;
+    private String id;
     private String url;
     private String title;
     private String description;
 
     public GetAdsDownloadUrlResponse(Object data) throws JSONException {
         JSONObject jsonObject = (JSONObject) data;
-        this.adId = jsonObject.getString("id");//*
+        this.id = jsonObject.getString("id");//*
         this.url = jsonObject.getString("url");
         this.title = jsonObject.getString("title");
         this.description = jsonObject.getString("description");
@@ -23,19 +21,19 @@ public class GetAdsDownloadUrlResponse {
 
     public AdsData getAdsData() {
         return new AdsData(
-                getAdId(),
+                getId(),
                 getUrl(),
                 getTitle(),
                 getDescription()
         );
     }
 
-    public String getAdId() {
-        return adId;
+    public String getId() {
+        return id;
     }
 
-    public void setAdId(String adId) {
-        this.adId = adId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUrl() {
