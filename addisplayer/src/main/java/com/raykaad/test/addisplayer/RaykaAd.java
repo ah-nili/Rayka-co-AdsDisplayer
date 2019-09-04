@@ -138,7 +138,6 @@ public class RaykaAd {
     }
 
     public String getGoogleAdsId() {
-        setGoogleAdsId();
         return googleAdId;
     }
 
