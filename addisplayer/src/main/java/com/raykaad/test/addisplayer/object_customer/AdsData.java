@@ -8,8 +8,6 @@ public class AdsData {
     private String title;
     private String description;
 
-
-
     public AdsData() {
     }
 

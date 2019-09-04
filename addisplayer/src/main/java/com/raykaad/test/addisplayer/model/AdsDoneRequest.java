@@ -5,10 +5,8 @@ import org.json.JSONObject;
 
 public class AdsDoneRequest {
 
-
-        private String googleAdID;
-        private String adsID;
-
+    private String googleAdID;
+    private String adsID;
 
     public AdsDoneRequest(String googleAdID, String adsID) {
         this.googleAdID = googleAdID;

@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 public class GetAdsDownloadUrlRequest {
 
-
     private String googleAdID;
     private String packageName;
 

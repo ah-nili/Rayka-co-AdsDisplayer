@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 public class BaseRequest {
 
-
     private RequestMethodEnum requestMethodEnum;
     private String url;
     private JSONObject data;

@@ -12,7 +12,6 @@ import com.raykaad.test.addisplayer.model.BaseRequest;
 import com.raykaad.test.addisplayer.model.BaseResponse;
 import com.raykaad.test.addisplayer.http_url_connection.RequestCallBack;
 import com.raykaad.test.addisplayer.http_url_connection.RequestHelper;
-import com.raykaad.test.addisplayer.model.GetAdsDownloadUrlRequest;
 import com.raykaad.test.addisplayer.model.GetAdsDownloadUrlResponse;
 import com.raykaad.test.addisplayer.model.GetAllInstalledAdsResponse;
 import com.raykaad.test.addisplayer.rayka_enum.RequestMethodEnum;
@@ -28,7 +27,6 @@ public class RaykaAd {
     private Context context;
     private String googleAdId;
 
-
     public static RaykaAd getInstance() {
 
         if (instance == null)
@@ -37,13 +35,11 @@ public class RaykaAd {
         return instance;
     }
 
-
     public static void init(Context context) {
         getInstance().context = context;
         getInstance().googleAdId = "";
         getInstance().setGoogleAdsId();
     }
-
 
     public void getAdsDownloadURL(final CallBack.GetAdsDownloadURL callBack) {
         RequestHelper.getINSTANCE().SendAsyncRequest(
@@ -70,7 +66,6 @@ public class RaykaAd {
         );
     }
 
-
     public void getAllInstalledAds(final CallBack.GetAllInstalledAds callBack) {
         RequestHelper.getINSTANCE().SendAsyncRequest(
                 RequestMethodEnum.GET,
@@ -96,7 +91,6 @@ public class RaykaAd {
         );
     }
 
-
     public void adsDone(String adsID, final CallBack.AdsDone callBack) {
         RequestHelper.getINSTANCE().SendAsyncRequest(
                 RequestMethodEnum.PUT,
@@ -116,7 +110,6 @@ public class RaykaAd {
         );
     }
 
-
     public void setGoogleAdsId() {
         if (googleAdId.matches(""))
             new GoogleAdsIdAsyncTask().execute();
@@ -130,8 +123,6 @@ public class RaykaAd {
     public String getPackageName() {
         return context.getPackageName();
     }
-
-
 
     private class GoogleAdsIdAsyncTask extends AsyncTask<BaseRequest, String, String> {
         @Override
@@ -162,6 +153,5 @@ public class RaykaAd {
         }
 
     }
-
 
 }

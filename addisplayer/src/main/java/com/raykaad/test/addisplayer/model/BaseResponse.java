@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BaseResponse {
+
     private boolean hasError;
     private String message;
     private  Object data;

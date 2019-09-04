@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 public class GetAllInstalledAdsRequest {
 
-
     private String googleAdID;
     private String packageName;
 

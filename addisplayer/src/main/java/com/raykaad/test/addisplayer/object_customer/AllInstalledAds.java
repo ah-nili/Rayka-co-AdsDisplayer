@@ -17,7 +17,4 @@ public class AllInstalledAds {
         private String title;
         private String description;
     }
-
-
-
 }

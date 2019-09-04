@@ -11,7 +11,6 @@ import java.util.List;
 
 public class GetAllInstalledAdsResponse {
 
-
     private String adId;
     private String url;
     private String title;
@@ -20,7 +19,7 @@ public class GetAllInstalledAdsResponse {
     public GetAllInstalledAdsResponse(Object data) throws JSONException {
         JSONArray jsonArray = (JSONArray) data;
         JSONObject jsonObject = (JSONObject) data;
-        this.adId = jsonObject.getString("adId");
+        this.adId = jsonObject.getString("id");
         this.url = jsonObject.getString("url");
         this.title = jsonObject.getString("title");
         this.description = jsonObject.getString("description");

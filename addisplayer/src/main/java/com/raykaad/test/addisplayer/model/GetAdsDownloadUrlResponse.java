@@ -14,15 +14,14 @@ public class GetAdsDownloadUrlResponse {
 
     public GetAdsDownloadUrlResponse(Object data) throws JSONException {
         JSONObject jsonObject = (JSONObject) data;
-        this.adId = jsonObject.getString("adId");
-
+        this.adId = jsonObject.getString("id");//*
         this.url = jsonObject.getString("url");
         this.title = jsonObject.getString("title");
         this.description = jsonObject.getString("description");
 
     }
 
-    public AdsData getAdsData(){
+    public AdsData getAdsData() {
         return new AdsData(
                 getAdId(),
                 getUrl(),

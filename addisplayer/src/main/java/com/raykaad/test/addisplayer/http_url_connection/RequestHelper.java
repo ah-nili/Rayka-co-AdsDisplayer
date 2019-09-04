@@ -13,7 +13,7 @@ public class RequestHelper {
 
     RequestCallBack requestCallback;
 
-    private static RequestHelper INSTANCE;//INSTANCE
+    private static RequestHelper INSTANCE;
 
     public static RequestHelper getINSTANCE() {
 
@@ -22,7 +22,6 @@ public class RequestHelper {
 
         return INSTANCE;
     }
-
 
     private class RequestAsyncTask extends AsyncTask<BaseRequest, String, String> {
 
