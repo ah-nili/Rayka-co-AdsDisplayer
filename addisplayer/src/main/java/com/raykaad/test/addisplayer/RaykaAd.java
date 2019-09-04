@@ -133,7 +133,7 @@ public class RaykaAd {
     public void setGoogleAdsId() {
         if (googleAdId.matches(""))
             new GoogleAdsIdAsyncTask().execute();
-        else
+        else if (syncCallback != null)
             syncCallback.synced();
     }
 
@@ -173,7 +173,8 @@ public class RaykaAd {
         @Override
         protected void onPostExecute(String advertId) {
             googleAdId = advertId;
-            syncCallback.synced();
+            if (syncCallback != null)
+                syncCallback.synced();
         }
 
     }
